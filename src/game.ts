@@ -19,14 +19,14 @@ engine.addEntity(baseScene)
 
 const boxes: Entity[] = [] // Store boxes
 const boxBodies: CANNON.Body[] = [] // Store box bodies
-let boxStartPosition = 34 // Start position for the boxes
-let boxHeightPosition = 2
+let boxStartPosition: number = 34 // Start position for the boxes
+let boxHeightPosition: number = 2
 
-const blueMaterial = new Material()
+const blueMaterial: Material = new Material()
 blueMaterial.roughness = 0.5
 blueMaterial.albedoColor = Color3.FromInts(21, 105, 195)
 
-const blackMaterial = new Material()
+const blackMaterial: Material = new Material()
 blackMaterial.roughness = 0.5
 blackMaterial.albedoColor = Color3.FromInts(35, 35, 35)
 
@@ -37,7 +37,7 @@ for (let i = 0; i < 3; i++) {
     let positionY: number = boxHeightPosition
     let positionZ: number = 38
 
-    const box = new Entity()
+    const box: Entity = new Entity()
     engine.addEntity(box)
     box.addComponent(new BoxShape())
     box.addComponent(
@@ -91,23 +91,23 @@ for (let i = 0; i < wheelPositions.length; i++) {
 // Setup our world
 const world: CANNON.World = new CANNON.World()
 world.broadphase = new CANNON.SAPBroadphase(world)
-world.gravity.set(0, -10, 0) // m/s²
+world.gravity.set(0, -9.82, 0) // m/s²
 world.defaultContactMaterial.friction = 0
 
-const groundMaterial = new CANNON.Material("groundMaterial")
-const wheelMaterial = new CANNON.Material("wheelMaterial")
-const wheelGroundContactMaterial = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
+const groundMaterial: CANNON.Material = new CANNON.Material("groundMaterial")
+const wheelMaterial: CANNON.Material = new CANNON.Material("wheelMaterial")
+const wheelGroundContactMaterial: CANNON.ContactMaterial = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
   friction: 0.3,
   restitution: 0,
   contactEquationStiffness: 1000,
 })
 
 const boxMaterial: CANNON.Material = new CANNON.Material("boxMaterial")
-const boxToGroundContactMaterial = new CANNON.ContactMaterial(groundMaterial, boxMaterial, {
+const boxToGroundContactMaterial: CANNON.ContactMaterial = new CANNON.ContactMaterial(groundMaterial, boxMaterial, {
   friction: 0.4,
   restitution: 0.5,
 })
-const boxToBoxContactMaterial = new CANNON.ContactMaterial(boxMaterial, boxMaterial, {
+const boxToBoxContactMaterial: CANNON.ContactMaterial = new CANNON.ContactMaterial(boxMaterial, boxMaterial, {
   friction: 0.5,
   restitution: 0.5,
 })
@@ -151,7 +151,7 @@ chassisBody.addShape(chassisShape)
 chassisBody.position.set(16, 4, 16) // Start position in scene
 chassisBody.angularVelocity.set(-1.5, 0.0, 1.5)
 
-var options = {
+const options = {
   radius: 0.5, // m
   directionLocal: new CANNON.Vec3(0, 0, -1),
   suspensionStiffness: 30,
@@ -178,20 +178,19 @@ for (let i = 0; i < wheelPositions.length; i++) {
   options.chassisConnectionPointLocal.set(wheelPositions[i].clone().x, wheelPositions[i].clone().y, wheelPositions[i].clone().z)
   vehicle.addWheel(options)
 }
-
 vehicle.addToWorld(world)
 
 const wheelBodies: CANNON.Body[] = []
 
-for (var i = 0; i < vehicle.wheelInfos.length; i++) {
-  var wheel = vehicle.wheelInfos[i]
-  var cylinderShape = new CANNON.Cylinder(wheel.radius, wheel.radius, wheel.radius / 2, 20)
-  var wheelBody = new CANNON.Body({
+for (let i = 0; i < vehicle.wheelInfos.length; i++) {
+  let wheel = vehicle.wheelInfos[i]
+  let cylinderShape: CANNON.Cylinder = new CANNON.Cylinder(wheel.radius, wheel.radius, wheel.radius / 2, 20)
+  let wheelBody: CANNON.Body = new CANNON.Body({
     mass: 0,
   })
   wheelBody.type = CANNON.Body.KINEMATIC
   wheelBody.collisionFilterGroup = 0 // turn off collisions
-  var q = new CANNON.Quaternion()
+  let q: CANNON.Quaternion = new CANNON.Quaternion()
   q.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2)
   wheelBody.addShape(cylinderShape, new CANNON.Vec3(), q)
   wheelBodies.push(wheelBody)
@@ -213,10 +212,10 @@ class updateSystem implements ISystem {
       boxes[i].getComponent(Transform).rotation.copyFrom(boxBodies[i].quaternion)
     }
 
-    for (var i = 0; i < vehicle.wheelInfos.length; i++) {
+    for (let i = 0; i < vehicle.wheelInfos.length; i++) {
       vehicle.updateWheelTransform(i)
-      var t = vehicle.wheelInfos[i].worldTransform
-      var wheelBody = wheelBodies[i]
+      let t: CANNON.Transform = vehicle.wheelInfos[i].worldTransform
+      let wheelBody: CANNON.Body = wheelBodies[i]
       wheelBody.position.copy(t.position)
       wheelBody.quaternion.copy(t.quaternion)
       wheels[i].getComponent(Transform).position.copyFrom(wheelBodies[i].position)
@@ -246,7 +245,7 @@ class updateDriveSystem implements ISystem {
     vehicle.setSteeringValue(steerValue, 1)
 
     // Braking
-    // Press E and F Keys together whilst letting go of the mouse button
+    // Press E and F Keys together
     if (isEKeyPressed && isFKeyPressed) {
       vehicle.setBrake(brakeForce, 0)
       vehicle.setBrake(brakeForce, 1)
@@ -270,26 +269,26 @@ let isEKeyPressed = false
 let isFKeyPressed = false
 
 // Pointer
-input.subscribe("BUTTON_DOWN", ActionButton.POINTER, false, (e) => {
+input.subscribe("BUTTON_DOWN", ActionButton.POINTER, false, () => {
   isPointerPressed = true
 })
-input.subscribe("BUTTON_UP", ActionButton.POINTER, false, (e) => {
+input.subscribe("BUTTON_UP", ActionButton.POINTER, false, () => {
   isPointerPressed = false
 })
 
 // E Key
-input.subscribe("BUTTON_DOWN", ActionButton.PRIMARY, false, (e) => {
+input.subscribe("BUTTON_DOWN", ActionButton.PRIMARY, false, () => {
   isEKeyPressed = true
 })
-input.subscribe("BUTTON_UP", ActionButton.PRIMARY, false, (e) => {
+input.subscribe("BUTTON_UP", ActionButton.PRIMARY, false, () => {
   isEKeyPressed = false
 })
 
 // F Key
-input.subscribe("BUTTON_DOWN", ActionButton.SECONDARY, false, (e) => {
+input.subscribe("BUTTON_DOWN", ActionButton.SECONDARY, false, () => {
   isFKeyPressed = true
 })
-input.subscribe("BUTTON_UP", ActionButton.SECONDARY, false, (e) => {
+input.subscribe("BUTTON_UP", ActionButton.SECONDARY, false, () => {
   isFKeyPressed = false
 })
 
