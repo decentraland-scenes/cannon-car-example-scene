@@ -5,6 +5,7 @@
 
 /// >>>>>>>>>> TODO: Reorient the car and wheels <<<<<<<<<<
 /// >>>>>>>>>> TODO: Needs refactoring <<<<<<<<<<
+/// >>>>>>>>>> TODO: Switch to cannon-es.js <<<<<<<<<<
 
 // Create base scene
 const baseScene: Entity = new Entity()
@@ -18,8 +19,8 @@ engine.addEntity(baseScene)
 
 const boxes: Entity[] = [] // Store boxes
 const boxBodies: CANNON.Body[] = [] // Store box bodies
-let boxStartPosition = 34 // Start height for the boxes
-let boxHeightPosition = 2 // Start height for the boxes
+let boxStartPosition = 34 // Start position for the boxes
+let boxHeightPosition = 2
 
 const blueMaterial = new Material()
 blueMaterial.roughness = 0.5
@@ -293,7 +294,7 @@ input.subscribe("BUTTON_UP", ActionButton.SECONDARY, false, (e) => {
 })
 
 class ButtonChecker {
-  update() {
+  update(dt: number) {
     if (isPointerPressed) {
       // Accelerate
       if (forwardForce > -maxSpeed) forwardForce -= 10
