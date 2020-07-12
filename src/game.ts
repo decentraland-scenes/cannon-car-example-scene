@@ -229,14 +229,14 @@ class updateSystem implements ISystem {
 
 engine.addSystem(new updateSystem())
 
-let forwardForce = 0.0
-let steerValue = 0.0
-const maxSteerValue = 0.5
-const maxSpeed = 300
-const brakeForce = 25
+let forwardForce: number = 0.0
+let steerValue: number = 0.0
+const maxSteerValue: number = 0.5
+const maxSpeed: number = 300
+const brakeForce: number = 25
 
 class updateDriveSystem implements ISystem {
-  update(dt: number): void {
+  update(): void {
     // Forward force
     vehicle.applyEngineForce(forwardForce, 2)
     vehicle.applyEngineForce(forwardForce, 3)
@@ -297,12 +297,12 @@ class ButtonChecker {
   update(dt: number) {
     if (isPointerPressed) {
       // Accelerate
-      if (forwardForce > -maxSpeed) forwardForce -= 10
+      if (forwardForce > -maxSpeed) forwardForce -= 300 * dt
       log(forwardForce)
     } else {
       // Decelerate
       if (forwardForce < 0) {
-        forwardForce += 10
+        forwardForce += 300 * dt
       } else {
         forwardForce = 0
       }
@@ -310,10 +310,10 @@ class ButtonChecker {
 
     if (isEKeyPressed && steerValue > -maxSteerValue) {
       log(steerValue)
-      steerValue -= 0.1
+      steerValue -= 3 * dt
     }
     if (isFKeyPressed && steerValue < maxSteerValue) {
-      steerValue += 0.1
+      steerValue += 3 * dt
     }
   }
 }
