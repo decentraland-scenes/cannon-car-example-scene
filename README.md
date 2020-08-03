@@ -11,13 +11,13 @@ Using raycast vehicle from the [cannon.js](https://github.com/schteppe/cannon.js
 After you clone the project, run the following:
 
 ```
-npm install
+$ npm i -g decentraland
 ```
 
 Followed by:
 
 ```
-dcl start
+$ dcl start
 ```
 
 * Left Mouse Button to accelerate

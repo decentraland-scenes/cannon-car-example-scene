@@ -221,6 +221,8 @@ class updateSystem implements ISystem {
       wheels[i].getComponent(Transform).position.copyFrom(wheelBodies[i].position)
       wheels[i].getComponent(Transform).rotation.copyFrom(wheelBodies[i].quaternion)
     }
+
+    // Modifying the wheels position and rotation needs to happen before the chassis
     chassis.getComponent(Transform).position.copyFrom(chassisBody.position)
     chassis.getComponent(Transform).rotation.copyFrom(chassisBody.quaternion)
   }
